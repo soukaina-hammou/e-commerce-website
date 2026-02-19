@@ -1,433 +1,652 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>和 Wafuku — Japanese Traditional Clothing</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Wanderlust — Smart Travel Planner</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+JP:wght@400;500;600;700;900&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar            { width: 7px; }
+    ::-webkit-scrollbar-track      { background: #E9F5F5; }
+    ::-webkit-scrollbar-thumb      { background: #0E7C7B; border-radius: 4px; }
+    .dark ::-webkit-scrollbar-track { background: #0F172A; }
+    .dark ::-webkit-scrollbar-thumb { background: #2A9D8F; }
+
+    /* ── Interest checkbox custom ── */
+    .interest-check:checked + label {
+      background: #0E7C7B;
+      color: #fff;
+      border-color: #0E7C7B;
+    }
+    .dark .interest-check:checked + label {
+      background: #2A9D8F;
+      border-color: #2A9D8F;
+      color: #fff;
+    }
+
+    /* ── Budget radio custom ── */
+    .budget-radio:checked + label {
+      background: #F4A261;
+      color: #264653;
+      border-color: #F4A261;
+      font-weight: 700;
+    }
+    .dark .budget-radio:checked + label {
+      background: #E76F51;
+      border-color: #E76F51;
+      color: #fff;
+    }
+
+    /* ── Loading dots ── */
+    .dot { animation: pulseDot 1.4s ease-in-out infinite; }
+    .dot:nth-child(2) { animation-delay: 0.16s; }
+    .dot:nth-child(3) { animation-delay: 0.32s; }
+
+    /* ── Hero parallax overlay ── */
+    .hero-overlay {
+      background: linear-gradient(160deg, rgba(38,70,83,0.92) 0%, rgba(14,124,123,0.75) 40%, rgba(42,157,143,0.50) 70%, rgba(244,162,97,0.30) 100%);
+    }
+
+    /* ── Card hover ── */
+    .plan-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .plan-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(14,124,123,0.15); }
+    .dark .plan-card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+
+    /* ── Day tab active ── */
+    .day-tab.active { background: #0E7C7B; color: #fff; border-color: #0E7C7B; }
+    .dark .day-tab.active { background: #2A9D8F; border-color: #2A9D8F; }
+
+    /* ── Input field ── */
+    .field:focus { outline: none; border-color: #0E7C7B; box-shadow: 0 0 0 3px rgba(14,124,123,0.15); }
+    .dark .field:focus { border-color: #2A9D8F; box-shadow: 0 0 0 3px rgba(42,157,143,0.2); }
+
+    /* ── Decorative patterns ── */
+    .dot-pattern {
+      background-image: radial-gradient(circle, rgba(14,124,123,0.08) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    .dark .dot-pattern {
+      background-image: radial-gradient(circle, rgba(42,157,143,0.06) 1px, transparent 1px);
+    }
+
+    /* ── Hero dot pattern ── */
+    .hero-dot-pattern {
+      background-image: radial-gradient(circle, #fff 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    /* ── Animation delays for floating icons ── */
+    .delay-0    { animation-delay: 0.0s; }
+    .delay-300  { animation-delay: 0.3s; }
+    .delay-600  { animation-delay: 0.6s; }
+    .delay-900  { animation-delay: 0.9s; }
+
+    /* ── Newsletter background pattern ── */
+    .newsletter-pattern {
+      background-image: repeating-linear-gradient(45deg, #fff, #fff 1px, transparent 1px, transparent 20px);
+    }
+  </style>
 </head>
-<body>
-  <!-- ======================== NAVBAR ======================== -->
-  <nav class="navbar" id="navbar">
-    <div class="container nav-container">
-      <a href="#" class="logo">和<span>Wafuku</span></a>
 
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#home" class="nav-link active">Home</a></li>
-        <li><a href="#products" class="nav-link">Collection</a></li>
-        <li><a href="#features" class="nav-link">Our Craft</a></li>
-        <li><a href="#testimonials" class="nav-link">Reviews</a></li>
-        <li><a href="#newsletter" class="nav-link">Newsletter</a></li>
-      </ul>
+<!-- ================================================
+     ROOT — toggle `dark` class for dark mode
+================================================ -->
+<body class="bg-sky dark:bg-darkBg text-ocean dark:text-gray-200 font-sans antialiased transition-colors duration-300">
 
-      <div class="nav-actions">
-        <button class="icon-btn cart-btn" id="cartBtn" aria-label="Cart">
-          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+<header id="navbar"
+  class="fixed top-0 left-0 w-full z-50 transition-all duration-300
+         bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg
+         border-b border-primary/10 dark:border-darkBorder">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-[68px]">
+
+      <!-- Logo -->
+      <a href="#home" class="flex items-center gap-2.5 group shrink-0">
+        <span class="text-3xl">✈️</span>
+        <span class="text-xl md:text-2xl font-display font-bold text-ocean dark:text-white tracking-tight">
+          Wander<span class="text-primary dark:text-oceanLight">lust</span>
+        </span>
+      </a>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-ocean/70 dark:text-gray-400">
+        <a href="#home"      class="hover:text-primary dark:hover:text-oceanLight transition">Home</a>
+        <a href="#planner"   class="hover:text-primary dark:hover:text-oceanLight transition">Planner</a>
+        <a href="#destinations" class="hover:text-primary dark:hover:text-oceanLight transition">Destinations</a>
+        <a href="#about"     class="hover:text-primary dark:hover:text-oceanLight transition">About</a>
+        <a href="#contact"   class="hover:text-primary dark:hover:text-oceanLight transition">Contact</a>
+      </nav>
+
+      <!-- Right controls -->
+      <div class="flex items-center gap-2.5">
+        <!-- Dark mode toggle -->
+        <button id="darkToggle" onclick="toggleDarkMode()" title="Toggle dark mode"
+          class="p-2.5 rounded-xl hover:bg-primary/10 dark:hover:bg-white/10 transition">
+          <svg id="sunIcon" class="w-5 h-5 text-accent hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
           </svg>
-          <span class="cart-count" id="cartCount">0</span>
+          <svg id="moonIcon" class="w-5 h-5 text-ocean dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
         </button>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-          <span></span><span></span><span></span>
+
+        <!-- Mobile menu toggle -->
+        <button id="mobileToggle" onclick="toggleMobileMenu()" title="Toggle menu" aria-label="Toggle menu"
+          class="md:hidden p-2 rounded-lg hover:bg-primary/10 dark:hover:bg-white/10 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
         </button>
       </div>
     </div>
-  </nav>
 
-  <!-- ======================== HERO ======================== -->
-  <header class="hero" id="home">
-    <div class="container hero-container">
-      <div class="hero-content" data-animate="fade-right">
-        <span class="hero-badge">🌸 Spring Collection 2026</span>
-        <h1>Timeless Beauty of <br /><span class="gradient-text">Japanese Tradition</span></h1>
-        <p>
-          Discover authentic kimono, yukata, hakama and more — handcrafted with
-          centuries-old techniques. Free worldwide shipping on orders over $100.
+    <!-- Mobile dropdown -->
+    <div id="mobileMenu" class="md:hidden overflow-hidden max-h-0 transition-all duration-300">
+      <div class="py-3 border-t border-primary/10 dark:border-darkBorder space-y-1 pb-4">
+        <a href="#home"      class="block px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-white/5 text-sm font-medium transition" onclick="closeMobileMenu()">Home</a>
+        <a href="#planner"   class="block px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-white/5 text-sm font-medium transition" onclick="closeMobileMenu()">Planner</a>
+        <a href="#destinations" class="block px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-white/5 text-sm font-medium transition" onclick="closeMobileMenu()">Destinations</a>
+        <a href="#about"     class="block px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-white/5 text-sm font-medium transition" onclick="closeMobileMenu()">About</a>
+        <a href="#contact"   class="block px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-white/5 text-sm font-medium transition" onclick="closeMobileMenu()">Contact</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ============================================================
+     HERO SECTION
+============================================================ -->
+<section id="home" class="relative min-h-screen flex items-center overflow-hidden">
+
+  <!-- Background gradient + decorative elements -->
+  <div class="absolute inset-0 bg-gradient-to-br from-ocean via-primary to-oceanLight">
+    <!-- Bokeh circles -->
+    <div class="absolute top-20 left-16 w-80 h-80 rounded-full bg-accent/10 blur-3xl"></div>
+    <div class="absolute bottom-24 right-12 w-96 h-96 rounded-full bg-oceanLight/15 blur-3xl"></div>
+    <div class="absolute top-1/2 left-1/3 w-72 h-72 rounded-full bg-sand/5 blur-3xl"></div>
+    <!-- Dot pattern -->
+    <div class="absolute inset-0 opacity-[0.06] hero-dot-pattern"></div>
+  </div>
+
+  <div class="hero-overlay absolute inset-0"></div>
+
+  <!-- Floating decorative icons (right side) -->
+  <div class="absolute right-6 md:right-16 top-1/2 -translate-y-1/2 hidden lg:flex flex-col items-center gap-6 select-none pointer-events-none opacity-50">
+    <span class="text-5xl animate-bounce-slow delay-0">🏔️</span>
+    <span class="text-4xl animate-bounce-slow delay-300">🌊</span>
+    <span class="text-5xl animate-bounce-slow delay-600">🗺️</span>
+    <span class="text-4xl animate-bounce-slow delay-900">🌅</span>
+  </div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 pb-24 md:pt-36 md:pb-32">
+    <div class="max-w-2xl animate-fade-up">
+
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 mb-8 backdrop-blur-sm">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        <span class="text-white/80 text-xs font-semibold uppercase tracking-widest">AI-Powered Travel Planner</span>
+      </div>
+
+      <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.1] mb-6">
+        Your Next
+        <span class="text-accent">Adventure</span>
+        <br />Starts Here
+      </h1>
+
+      <p class="text-white/70 text-base md:text-lg leading-relaxed mb-10 max-w-lg">
+        Tell us your destination, interests, and budget — we'll craft a personalized day-by-day travel itinerary in seconds. No sign-up required.
+      </p>
+
+      <div class="flex flex-wrap gap-4 mb-14">
+        <a href="#planner"
+          class="inline-flex items-center gap-2.5 bg-accent hover:bg-accentDk text-ocean font-bold px-8 py-4 rounded-full transition-all shadow-lg shadow-accent/30 hover:shadow-accent/50 hover:scale-[1.02] active:scale-[0.98]">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+          Plan My Trip
+        </a>
+        <a href="#destinations"
+          class="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white/60 text-white px-8 py-4 rounded-full font-semibold transition-all hover:bg-white/10">
+          Explore Destinations
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex gap-10">
+        <div>
+          <p class="text-2xl md:text-3xl font-bold text-white">12</p>
+          <p class="text-white/50 text-sm">Cities</p>
+        </div>
+        <div>
+          <p class="text-2xl md:text-3xl font-bold text-white">200+</p>
+          <p class="text-white/50 text-sm">Attractions</p>
+        </div>
+        <div>
+          <p class="text-2xl md:text-3xl font-bold text-white">100%</p>
+          <p class="text-white/50 text-sm">Free</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <a href="#planner" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/40 hover:text-white/70 transition animate-bounce">
+    <span class="text-xs uppercase tracking-widest">Scroll</span>
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+  </a>
+</section>
+
+
+<!-- ============================================================
+     FEATURES STRIP
+============================================================ -->
+<section class="bg-white dark:bg-darkCard border-b border-primary/5 dark:border-darkBorder">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 dark:bg-oceanLight/10 flex items-center justify-center shrink-0">
+          <span class="text-lg">🌍</span>
+        </div>
+        <div>
+          <p class="font-semibold text-sm text-ocean dark:text-white">12 Cities</p>
+          <p class="text-ocean/50 dark:text-gray-500 text-xs">Curated destinations</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+          <span class="text-lg">⚡</span>
+        </div>
+        <div>
+          <p class="font-semibold text-sm text-ocean dark:text-white">Instant Plans</p>
+          <p class="text-ocean/50 dark:text-gray-500 text-xs">Generated in seconds</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 dark:bg-oceanLight/10 flex items-center justify-center shrink-0">
+          <span class="text-lg">🎯</span>
+        </div>
+        <div>
+          <p class="font-semibold text-sm text-ocean dark:text-white">Personalized</p>
+          <p class="text-ocean/50 dark:text-gray-500 text-xs">Matched to interests</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center shrink-0">
+          <span class="text-lg">💸</span>
+        </div>
+        <div>
+          <p class="font-semibold text-sm text-ocean dark:text-white">Budget Aware</p>
+          <p class="text-ocean/50 dark:text-gray-500 text-xs">Low to luxury</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     TRIP PLANNER FORM
+============================================================ -->
+<section id="planner" class="py-20 md:py-28 bg-sky dark:bg-darkBg dot-pattern">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Header -->
+    <div class="text-center mb-14">
+      <p class="text-primary dark:text-oceanLight text-xs font-bold uppercase tracking-widest mb-2">Trip Planner</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-ocean dark:text-white mb-3">
+        Plan Your Perfect Getaway
+      </h2>
+      <p class="text-ocean/60 dark:text-gray-400 max-w-xl mx-auto text-sm md:text-base">
+        Fill in the details below and we'll generate a personalized day-by-day itinerary just for you.
+      </p>
+    </div>
+
+    <!-- Form Card -->
+    <form id="tripForm" onsubmit="handleFormSubmit(event)"
+      class="bg-white dark:bg-darkCard rounded-3xl shadow-xl shadow-primary/5 dark:shadow-black/20 border border-primary/5 dark:border-darkBorder p-6 md:p-10 space-y-8">
+
+      <!-- Row 1: Destination + Days -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Destination -->
+        <div>
+          <label for="destination" class="block text-sm font-semibold text-ocean dark:text-gray-300 mb-2">
+            📍 Destination City
+          </label>
+          <select id="destination" required
+            class="field w-full px-4 py-3 rounded-xl bg-sky dark:bg-darkBg border border-primary/15 dark:border-darkBorder text-ocean dark:text-gray-200 text-sm transition">
+            <option value="">Select a city...</option>
+          </select>
+          <p id="destError" class="text-red-500 text-xs mt-1 hidden">Please select a destination</p>
+        </div>
+
+        <!-- Number of Days -->
+        <div>
+          <label for="numDays" class="block text-sm font-semibold text-ocean dark:text-gray-300 mb-2">
+            📅 Number of Days
+          </label>
+          <input id="numDays" type="number" min="1" max="14" value="3" required
+            class="field w-full px-4 py-3 rounded-xl bg-sky dark:bg-darkBg border border-primary/15 dark:border-darkBorder text-ocean dark:text-gray-200 text-sm transition" />
+          <p class="text-ocean/40 dark:text-gray-500 text-xs mt-1">Between 1 and 14 days</p>
+        </div>
+      </div>
+
+      <!-- Interests -->
+      <div>
+        <label class="block text-sm font-semibold text-ocean dark:text-gray-300 mb-3">
+          🎯 Your Interests <span class="font-normal text-ocean/40 dark:text-gray-500">(select at least one)</span>
+        </label>
+        <div id="interestsGrid" class="flex flex-wrap gap-2.5">
+          <!-- Populated by JS -->
+        </div>
+        <p id="interestError" class="text-red-500 text-xs mt-2 hidden">Please select at least one interest</p>
+      </div>
+
+      <!-- Budget -->
+      <div>
+        <label class="block text-sm font-semibold text-ocean dark:text-gray-300 mb-3">
+          💰 Budget Level
+        </label>
+        <div class="flex flex-wrap gap-3" id="budgetGroup">
+          <input type="radio" name="budget" value="low" id="budgetLow" class="budget-radio sr-only" />
+          <label for="budgetLow"
+            class="px-6 py-2.5 rounded-full border border-primary/15 dark:border-darkBorder text-sm font-medium text-ocean/70 dark:text-gray-400 cursor-pointer transition hover:border-primary/40 dark:hover:border-oceanLight/40">
+            🪙 Budget
+          </label>
+
+          <input type="radio" name="budget" value="medium" id="budgetMed" class="budget-radio sr-only" checked />
+          <label for="budgetMed"
+            class="px-6 py-2.5 rounded-full border border-primary/15 dark:border-darkBorder text-sm font-medium text-ocean/70 dark:text-gray-400 cursor-pointer transition hover:border-primary/40 dark:hover:border-oceanLight/40">
+            💵 Mid-range
+          </label>
+
+          <input type="radio" name="budget" value="high" id="budgetHigh" class="budget-radio sr-only" />
+          <label for="budgetHigh"
+            class="px-6 py-2.5 rounded-full border border-primary/15 dark:border-darkBorder text-sm font-medium text-ocean/70 dark:text-gray-400 cursor-pointer transition hover:border-primary/40 dark:hover:border-oceanLight/40">
+            💎 Luxury
+          </label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" id="generateBtn"
+        class="w-full md:w-auto px-10 py-4 bg-primary hover:bg-primaryDk dark:bg-oceanLight dark:hover:bg-primary text-white font-bold text-sm rounded-full transition-all shadow-lg shadow-primary/20 dark:shadow-oceanLight/20 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2.5 mx-auto">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        Generate My Plan
+      </button>
+    </form>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     LOADING OVERLAY (hidden by default)
+============================================================ -->
+<div id="loadingOverlay" class="hidden fixed inset-0 z-[100] bg-white/90 dark:bg-darkBg/90 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+  <div class="flex gap-2">
+    <div class="dot w-4 h-4 rounded-full bg-primary dark:bg-oceanLight"></div>
+    <div class="dot w-4 h-4 rounded-full bg-accent"></div>
+    <div class="dot w-4 h-4 rounded-full bg-accentDk"></div>
+  </div>
+  <p class="text-ocean dark:text-gray-300 font-semibold text-sm animate-pulse">Crafting your perfect itinerary...</p>
+</div>
+
+
+<!-- ============================================================
+     RESULTS SECTION (hidden until generation)
+============================================================ -->
+<section id="results" class="hidden py-20 md:py-28 bg-white dark:bg-darkCard">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- Results Header -->
+    <div class="text-center mb-12" id="resultsHeader">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Day Tabs -->
+    <div id="dayTabs" class="flex flex-wrap justify-center gap-2 mb-10">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Day Content (itinerary cards) -->
+    <div id="dayContent" class="space-y-6">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Recommended Restaurants -->
+    <div class="mt-16">
+      <h3 class="font-display text-2xl font-bold text-ocean dark:text-white mb-2 text-center">🍽️ Recommended Restaurants</h3>
+      <p class="text-ocean/50 dark:text-gray-500 text-sm text-center mb-8">Curated picks matching your budget</p>
+      <div id="restaurantGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+
+    <!-- Reset button -->
+    <div class="text-center mt-14">
+      <button onclick="resetPlanner()"
+        class="inline-flex items-center gap-2 px-8 py-3 border-2 border-primary/20 dark:border-darkBorder text-primary dark:text-oceanLight font-semibold rounded-full hover:bg-primary/5 dark:hover:bg-white/5 transition">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Plan Another Trip
+      </button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     DESTINATIONS SHOWCASE
+============================================================ -->
+<section id="destinations" class="py-20 md:py-28 bg-sky dark:bg-darkBg dot-pattern">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14">
+      <p class="text-primary dark:text-oceanLight text-xs font-bold uppercase tracking-widest mb-2">Explore</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-ocean dark:text-white mb-3">Popular Destinations</h2>
+      <p class="text-ocean/60 dark:text-gray-400 max-w-xl mx-auto text-sm">
+        Discover our handpicked cities from around the world. Click any card to start planning.
+      </p>
+    </div>
+
+    <div id="destinationGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     ABOUT SECTION
+============================================================ -->
+<section id="about" class="py-20 md:py-28 bg-white dark:bg-darkCard">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <!-- Text -->
+      <div>
+        <p class="text-primary dark:text-oceanLight text-xs font-bold uppercase tracking-widest mb-2">About Us</p>
+        <h2 class="font-display text-3xl md:text-4xl font-bold text-ocean dark:text-white mb-6">Why Wanderlust?</h2>
+        <p class="text-ocean/60 dark:text-gray-400 leading-relaxed mb-6">
+          We believe everyone deserves a well-planned trip. Wanderlust uses smart algorithms to match your interests, budget, and available time with the best attractions and restaurants in each city.
         </p>
-        <div class="hero-actions">
-          <a href="#products" class="btn btn-primary">Explore Collection</a>
-          <a href="#features" class="btn btn-outline">Our Story</a>
-        </div>
-        <div class="hero-stats">
-          <div class="stat">
-            <strong>500+</strong>
-            <span>Garments</span>
-          </div>
-          <div class="stat">
-            <strong>98%</strong>
-            <span>Happy Clients</span>
-          </div>
-          <div class="stat">
-            <strong>50+</strong>
-            <span>Artisans</span>
-          </div>
-        </div>
-      </div>
-      <div class="hero-image" data-animate="fade-left">
-        <div class="hero-image-wrapper">
-          <img
-            src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=700&q=80"
-            alt="Beautiful Japanese kimono display"
-          />
-          <div class="floating-card card-1">
-            <span class="card-icon">🎌</span>
-            <div>
-              <strong>Made in Japan</strong>
-              <small>Authentic craftsmanship</small>
-            </div>
-          </div>
-          <div class="floating-card card-2">
-            <span class="card-icon">⭐</span>
-            <div>
-              <strong>Top Rated</strong>
-              <small>4.9 / 5 average</small>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- ======================== CATEGORIES ======================== -->
-  <section class="categories" data-animate="fade-up">
-    <div class="container">
-      <div class="categories-grid">
-        <a href="#products" class="category-card">
-          <span class="category-icon">�</span>
-          <h3>Kimono</h3>
-        </a>
-        <a href="#products" class="category-card">
-          <span class="category-icon">🎐</span>
-          <h3>Yukata</h3>
-        </a>
-        <a href="#products" class="category-card">
-          <span class="category-icon">🎎</span>
-          <h3>Hakama</h3>
-        </a>
-        <a href="#products" class="category-card">
-          <span class="category-icon">🩴</span>
-          <h3>Geta &amp; Zori</h3>
-        </a>
-        <a href="#products" class="category-card">
-          <span class="category-icon">🪭</span>
-          <h3>Accessories</h3>
-        </a>
-        <a href="#products" class="category-card">
-          <span class="category-icon">🧶</span>
-          <h3>Obi Belts</h3>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== PRODUCTS ======================== -->
-  <section class="products" id="products">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">Our Collection — コレクション</span>
-        <h2>Traditional Garments</h2>
-        <p>Authentic Japanese clothing handcrafted by skilled artisans</p>
-      </div>
-
-      <div class="product-filters" data-animate="fade-up">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="kimono">Kimono</button>
-        <button class="filter-btn" data-filter="yukata">Yukata</button>
-        <button class="filter-btn" data-filter="hakama">Hakama</button>
-        <button class="filter-btn" data-filter="accessories">Accessories</button>
-      </div>
-
-      <div class="products-grid" id="productsGrid">
-        <!-- Products injected by JavaScript -->
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== FEATURES / WHY US ======================== -->
-  <section class="features" id="features">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">Why Choose Us — 私たちの約束</span>
-        <h2>Crafted With Honor</h2>
-        <p>We bring centuries of Japanese textile tradition to your doorstep</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card" data-animate="fade-up">
-          <div class="feature-icon">🎌</div>
-          <h3>Authentic Japanese</h3>
-          <p>Every garment is sourced directly from artisan workshops across Kyoto, Tokyo, and Kanazawa.</p>
-        </div>
-        <div class="feature-card" data-animate="fade-up">
-          <div class="feature-icon">✂️</div>
-          <h3>Handcrafted Quality</h3>
-          <p>Traditional techniques passed down through generations ensure exceptional craftsmanship.</p>
-        </div>
-        <div class="feature-card" data-animate="fade-up">
-          <div class="feature-icon">🌏</div>
-          <h3>Worldwide Shipping</h3>
-          <p>Free shipping on orders over $100. Carefully packaged to arrive in perfect condition.</p>
-        </div>
-        <div class="feature-card" data-animate="fade-up">
-          <div class="feature-icon">👘</div>
-          <h3>Styling Guidance</h3>
-          <p>Our kimono experts offer personalized advice on sizing, styling, and occasion matching.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================== PROMO BANNER ======================== -->
-  <section class="promo-banner" data-animate="fade-up">
-    <div class="container promo-container">
-      <div class="promo-content">
-        <span class="promo-tag">春のセール — Spring Festival</span>
-        <h2>Get Up To <span class="gradient-text">40% Off</span></h2>
-        <p>
-          Celebrate the cherry blossom season with our biggest sale. Authentic
-          kimono and yukata at special prices. Limited time only!
+        <p class="text-ocean/60 dark:text-gray-400 leading-relaxed mb-8">
+          No sign-ups, no fees, no API keys — just pure front-end magic. Our curated database covers 12 amazing cities across 5 continents, with over 200 hand-picked attractions and restaurants.
         </p>
-        <div class="promo-timer" id="promoTimer">
-          <div class="timer-block">
-            <span class="timer-value" id="days">00</span>
-            <span class="timer-label">Days</span>
+        <div class="flex gap-4">
+          <div class="px-6 py-4 bg-sky dark:bg-darkBg rounded-2xl border border-primary/10 dark:border-darkBorder text-center">
+            <p class="text-2xl font-bold text-primary dark:text-oceanLight">12</p>
+            <p class="text-ocean/50 dark:text-gray-500 text-xs mt-1">Cities</p>
           </div>
-          <div class="timer-block">
-            <span class="timer-value" id="hours">00</span>
-            <span class="timer-label">Hours</span>
+          <div class="px-6 py-4 bg-sky dark:bg-darkBg rounded-2xl border border-primary/10 dark:border-darkBorder text-center">
+            <p class="text-2xl font-bold text-primary dark:text-oceanLight">200+</p>
+            <p class="text-ocean/50 dark:text-gray-500 text-xs mt-1">Attractions</p>
           </div>
-          <div class="timer-block">
-            <span class="timer-value" id="minutes">00</span>
-            <span class="timer-label">Minutes</span>
-          </div>
-          <div class="timer-block">
-            <span class="timer-value" id="seconds">00</span>
-            <span class="timer-label">Seconds</span>
+          <div class="px-6 py-4 bg-sky dark:bg-darkBg rounded-2xl border border-primary/10 dark:border-darkBorder text-center">
+            <p class="text-2xl font-bold text-primary dark:text-oceanLight">100+</p>
+            <p class="text-ocean/50 dark:text-gray-500 text-xs mt-1">Restaurants</p>
           </div>
         </div>
-        <a href="#products" class="btn btn-primary">Shop the Sale</a>
       </div>
-    </div>
-  </section>
-
-  <!-- ======================== TESTIMONIALS ======================== -->
-  <section class="testimonials" id="testimonials">
-    <div class="container">
-      <div class="section-header" data-animate="fade-up">
-        <span class="section-tag">Testimonials — お客様の声</span>
-        <h2>What Our Customers Say</h2>
-        <p>Real stories from customers who found their perfect traditional garment</p>
-      </div>
-
-      <div class="testimonials-slider" data-animate="fade-up">
-        <div class="testimonial-track" id="testimonialTrack">
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>
-              "The silk kimono I ordered is absolutely breathtaking. The craftsmanship
-              is incredible — you can feel the tradition in every stitch. Wore it to a
-              tea ceremony and received so many compliments!"
-            </p>
-            <div class="testimonial-author">
-              <img src="https://i.pravatar.cc/48?img=1" alt="Yuki M." />
-              <div>
-                <strong>Yuki M.</strong>
-                <span>Verified Buyer</span>
-              </div>
-            </div>
+      <!-- Visual -->
+      <div class="flex justify-center">
+        <div class="relative w-72 h-72 md:w-80 md:h-80">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20 rounded-3xl rotate-6"></div>
+          <div class="absolute inset-0 bg-gradient-to-br from-ocean to-primary rounded-3xl flex flex-col items-center justify-center text-center p-6 shadow-2xl">
+            <span class="text-7xl mb-4">🌏</span>
+            <p class="text-white font-display text-xl font-bold">Wanderlust</p>
+            <p class="text-white/60 text-sm mt-1">Travel Smarter</p>
           </div>
-
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>
-              "I bought a yukata for the summer festival and it fit perfectly.
-              The styling guide they sent was so helpful for tying the obi. 
-              Already planning my next purchase!"
-            </p>
-            <div class="testimonial-author">
-              <img src="https://i.pravatar.cc/48?img=3" alt="David K." />
-              <div>
-                <strong>David K.</strong>
-                <span>Verified Buyer</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>
-              "As someone living outside Japan, finding authentic traditional clothing
-              was always difficult. Wafuku made it so easy. The hakama set I ordered
-              arrived beautifully packaged. Truly a premium experience."
-            </p>
-            <div class="testimonial-author">
-              <img src="https://i.pravatar.cc/48?img=5" alt="Sakura T." />
-              <div>
-                <strong>Sakura T.</strong>
-                <span>Verified Buyer</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="testimonial-card">
-            <div class="stars">★★★★★</div>
-            <p>
-              "Ordered matching couple yukata for our anniversary trip to Kyoto.
-              The quality exceeded all expectations. The customer service team even
-              helped me choose the perfect patterns. Highly recommended!"
-            </p>
-            <div class="testimonial-author">
-              <img src="https://i.pravatar.cc/48?img=8" alt="Emma & Ren" />
-              <div>
-                <strong>Emma &amp; Ren</strong>
-                <span>Verified Buyers</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="slider-controls">
-          <button class="slider-btn" id="prevBtn" aria-label="Previous">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M15 18l-6-6 6-6"/>
-            </svg>
-          </button>
-          <div class="slider-dots" id="sliderDots"></div>
-          <button class="slider-btn" id="nextBtn" aria-label="Next">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M9 18l6-6-6-6"/>
-            </svg>
-          </button>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ======================== NEWSLETTER ======================== -->
-  <section class="newsletter" id="newsletter">
-    <div class="container">
-      <div class="newsletter-container" data-animate="fade-up">
-        <div class="newsletter-content">
-          <h2>Join Our Community</h2>
-          <p>Subscribe to receive <strong>10% off</strong> your first order, seasonal styling tips, and early access to new collections from Japan.</p>
+
+<!-- ============================================================
+     CONTACT SECTION
+============================================================ -->
+<section id="contact" class="py-20 md:py-28 bg-sky dark:bg-darkBg">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <p class="text-primary dark:text-oceanLight text-xs font-bold uppercase tracking-widest mb-2">Reach Out</p>
+      <h2 class="font-display text-3xl md:text-4xl font-bold text-ocean dark:text-white">Get in Touch</h2>
+      <p class="text-ocean/60 dark:text-gray-400 mt-3 text-sm max-w-md mx-auto">Feedback, suggestions, or partnership ideas? We'd love to hear from you.</p>
+    </div>
+    <div class="max-w-xl mx-auto">
+      <form onsubmit="event.preventDefault(); showToast('✅ Message sent! We\'ll reply within 24 hours.', 'success');" class="space-y-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <input type="text" placeholder="Your Name" required
+            class="field w-full px-4 py-3 rounded-xl bg-white dark:bg-darkCard border border-primary/15 dark:border-darkBorder text-ocean dark:text-gray-200 placeholder-ocean/40 dark:placeholder-gray-500 text-sm transition" />
+          <input type="email" placeholder="Your Email" required
+            class="field w-full px-4 py-3 rounded-xl bg-white dark:bg-darkCard border border-primary/15 dark:border-darkBorder text-ocean dark:text-gray-200 placeholder-ocean/40 dark:placeholder-gray-500 text-sm transition" />
         </div>
-        <form class="newsletter-form" id="newsletterForm">
-          <div class="input-group">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              required
-              id="emailInput"
-            />
-            <button type="submit" class="btn btn-primary">Subscribe</button>
-          </div>
-          <p class="form-note">🔒 We respect your privacy. Unsubscribe anytime.</p>
-        </form>
+        <textarea rows="4" placeholder="Your Message" required
+          class="field w-full px-4 py-3 rounded-xl bg-white dark:bg-darkCard border border-primary/15 dark:border-darkBorder text-ocean dark:text-gray-200 placeholder-ocean/40 dark:placeholder-gray-500 text-sm transition resize-none"></textarea>
+        <button type="submit"
+          class="w-full sm:w-auto px-10 py-3.5 bg-primary hover:bg-primaryDk dark:bg-oceanLight dark:hover:bg-primary text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     NEWSLETTER
+============================================================ -->
+<section class="py-16 bg-ocean dark:bg-darkCard relative overflow-hidden">
+  <div class="absolute inset-0 opacity-[0.05] newsletter-pattern"></div>
+  <div class="max-w-3xl mx-auto px-4 text-center relative">
+    <p class="text-accent text-xs font-bold uppercase tracking-widest mb-3">Stay Updated</p>
+    <h2 class="font-display text-2xl md:text-3xl font-bold text-white mb-3">Never Miss a Travel Tip</h2>
+    <p class="text-white/60 mb-7 text-sm">Subscribe for curated travel inspiration, new destinations, and planning tips.</p>
+    <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+      onsubmit="event.preventDefault(); showToast('🎉 You\'re subscribed! Travel tips incoming.', 'success');">
+      <input type="email" placeholder="your@email.com" required
+        class="flex-1 px-5 py-3 rounded-full bg-white/10 border border-white/20 text-white placeholder-white/40 focus:outline-none focus:border-white/50 transition text-sm" />
+      <button type="submit"
+        class="px-8 py-3 bg-accent hover:bg-accentDk text-ocean font-bold rounded-full transition-all shadow-lg shadow-accent/20">
+        Subscribe
+      </button>
+    </form>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER
+============================================================ -->
+<footer class="bg-ocean dark:bg-[#0A1120] pt-14 pb-8 border-t border-white/5">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <!-- Brand -->
+      <div>
+        <a href="#home" class="flex items-center gap-2.5 mb-4">
+          <span class="text-2xl">✈️</span>
+          <span class="text-lg font-display font-bold text-white">Wander<span class="text-accent">lust</span></span>
+        </a>
+        <p class="text-white/40 text-sm leading-relaxed">Your intelligent travel companion. Discover, plan, and explore the world with personalized itineraries.</p>
+      </div>
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-semibold text-white mb-4">Quick Links</h4>
+        <ul class="space-y-2 text-white/40 text-sm">
+          <li><a href="#home" class="hover:text-accent transition">Home</a></li>
+          <li><a href="#planner" class="hover:text-accent transition">Trip Planner</a></li>
+          <li><a href="#destinations" class="hover:text-accent transition">Destinations</a></li>
+          <li><a href="#about" class="hover:text-accent transition">About</a></li>
+        </ul>
+      </div>
+      <!-- Top Destinations -->
+      <div>
+        <h4 class="font-semibold text-white mb-4">Top Destinations</h4>
+        <ul class="space-y-2 text-white/40 text-sm">
+          <li><a href="#" class="hover:text-accent transition" onclick="quickPlan('Paris')">Paris</a></li>
+          <li><a href="#" class="hover:text-accent transition" onclick="quickPlan('Tokyo')">Tokyo</a></li>
+          <li><a href="#" class="hover:text-accent transition" onclick="quickPlan('New York')">New York</a></li>
+          <li><a href="#" class="hover:text-accent transition" onclick="quickPlan('Marrakech')">Marrakech</a></li>
+        </ul>
+      </div>
+      <!-- Contact -->
+      <div>
+        <h4 class="font-semibold text-white mb-4">Contact</h4>
+        <ul class="space-y-2.5 text-white/40 text-sm">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            hello@wanderlust.travel
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Worldwide
+          </li>
+        </ul>
+        <div class="flex gap-3 mt-4">
+          <a href="#" title="Twitter" class="w-9 h-9 bg-white/5 hover:bg-accent/20 border border-white/10 hover:border-accent/40 rounded-full flex items-center justify-center transition">
+            <svg class="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+          </a>
+          <a href="#" title="Instagram" class="w-9 h-9 bg-white/5 hover:bg-accent/20 border border-white/10 hover:border-accent/40 rounded-full flex items-center justify-center transition">
+            <svg class="w-4 h-4 text-white/60" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+        </div>
       </div>
     </div>
-  </section>
-
-  <!-- ======================== FOOTER ======================== -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <a href="#" class="logo">和<span>Wafuku</span></a>
-          <p>Bringing the timeless elegance of Japanese traditional clothing to the world. Authentic craftsmanship you can trust.</p>
-          <div class="social-links">
-            <a href="#" aria-label="Facebook">
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-            </a>
-            <a href="#" aria-label="Twitter">
-              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-            </a>
-            <a href="#" aria-label="Instagram">
-              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#products">Collection</a></li>
-            <li><a href="#features">Our Craft</a></li>
-            <li><a href="#testimonials">Reviews</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Customer Service</h4>
-          <ul>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Sizing Guide</a></li>
-            <li><a href="#">Kimono Care Tips</a></li>
-            <li><a href="#">Returns &amp; Exchanges</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Contact Info</h4>
-          <ul class="contact-list">
-            <li>📍 Gion District, Kyoto, Japan</li>
-            <li>📧 hello@wafuku.jp</li>
-            <li>📞 +81 (75) 123-4567</li>
-            <li>🕐 Mon–Sat: 10AM–7PM JST</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; 2026 和Wafuku. All rights reserved.</p>
-        <div class="footer-bottom-links">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Cookies</a>
-        </div>
-      </div>
+    <div class="border-t border-white/10 pt-6 text-center text-white/30 text-xs">
+      <p>&copy; 2026 Wanderlust. All rights reserved. Made with ❤️ for travelers everywhere.</p>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <!-- ======================== CART SIDEBAR ======================== -->
-  <div class="cart-overlay" id="cartOverlay"></div>
-  <aside class="cart-sidebar" id="cartSidebar">
-    <div class="cart-header">
-      <h3>Your Cart</h3>
-      <button class="close-cart" id="closeCart" aria-label="Close cart">&times;</button>
-    </div>
-    <div class="cart-items" id="cartItems">
-      <div class="cart-empty">
-        <span>🛒</span>
-        <p>Your cart is empty</p>
-      </div>
-    </div>
-    <div class="cart-footer" id="cartFooter" style="display: none;">
-      <div class="cart-total">
-        <span>Total:</span>
-        <strong id="cartTotal">$0.00</strong>
-      </div>
-      <button class="btn btn-primary btn-block">Checkout</button>
-    </div>
-  </aside>
 
-  <!-- ======================== BACK TO TOP ======================== -->
-  <button class="back-to-top" id="backToTop" aria-label="Back to top">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-      <path d="M18 15l-6-6-6 6"/>
-    </svg>
-  </button>
+<!-- ============================================================
+     TOAST CONTAINER
+============================================================ -->
+<div id="toastContainer" class="fixed bottom-6 right-6 z-[90] flex flex-col gap-2 pointer-events-none"></div>
 
-  <!-- ======================== TOAST ======================== -->
-  <div class="toast-container" id="toastContainer"></div>
 
-  <script src="script.js"></script>
+<!-- ============================================================
+     BACK TO TOP
+============================================================ -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"
+  class="fixed bottom-6 left-6 w-11 h-11 bg-primary hover:bg-primaryDk dark:bg-oceanLight dark:hover:bg-primary text-white rounded-full shadow-lg flex items-center justify-center z-40 opacity-0 translate-y-4 pointer-events-none transition-all duration-300 hover:scale-110">
+  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
+</button>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script src="script.js"></script>
+
 </body>
 </html>
